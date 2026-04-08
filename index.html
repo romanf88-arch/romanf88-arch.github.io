@@ -3,514 +3,181 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Portfolio</title>
+  <title>Roman Friedman | Online Education Coordinator</title>
   <style>
     :root {
-      --bg: #f7f8fa;
-      --surface: #ffffff;
-      --text: #111827;
-      --muted: #6b7280;
-      --border: #e5e7eb;
-      --accent: #2563eb;
-      --accent-soft: #dbeafe;
-      --shadow: 0 12px 32px rgba(17, 24, 39, 0.08);
-      --radius: 20px;
-      --max-width: 1100px;
+      --bg: #f8fafc;
+      --text: #0f172a;
+      --muted: #64748b;
+      --accent: #0ea5e9;
+      --card: #ffffff;
+      --border: #e2e8f0;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: linear-gradient(180deg, #f9fafb 0%, #eef2ff 100%);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: var(--bg);
       color: var(--text);
       line-height: 1.6;
     }
 
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    img {
-      max-width: 100%;
-      display: block;
-    }
-
     .container {
-      width: min(100% - 2rem, var(--max-width));
-      margin: 0 auto;
+      max-width: 1000px;
+      margin: auto;
+      padding: 1.5rem;
     }
 
     header {
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      backdrop-filter: blur(12px);
-      background: rgba(247, 248, 250, 0.85);
-      border-bottom: 1px solid rgba(229, 231, 235, 0.8);
-    }
-
-    .nav {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
       padding: 1rem 0;
-      gap: 1rem;
-    }
-
-    .brand {
-      font-size: 1.1rem;
-      font-weight: 700;
-      letter-spacing: 0.02em;
-    }
-
-    .nav-links {
+      border-bottom: 1px solid var(--border);
       display: flex;
-      gap: 1.25rem;
+      justify-content: space-between;
+      align-items: center;
       flex-wrap: wrap;
     }
 
-    .nav-links a {
+    nav a {
+      margin-left: 1rem;
       color: var(--muted);
+      text-decoration: none;
       font-weight: 500;
-      transition: color 0.2s ease;
     }
 
-    .nav-links a:hover {
-      color: var(--accent);
-    }
+    nav a:hover { color: var(--accent); }
 
     .hero {
-      padding: 5.5rem 0 4rem;
-    }
-
-    .hero-card {
-      background: rgba(255, 255, 255, 0.78);
-      border: 1px solid rgba(255, 255, 255, 0.9);
-      box-shadow: var(--shadow);
-      border-radius: 28px;
-      padding: 3rem;
-      display: grid;
-      grid-template-columns: 1.3fr 0.9fr;
-      gap: 2rem;
-      align-items: center;
-    }
-
-    .eyebrow {
-      display: inline-block;
-      margin-bottom: 1rem;
-      padding: 0.35rem 0.8rem;
-      border-radius: 999px;
-      background: var(--accent-soft);
-      color: var(--accent);
-      font-size: 0.9rem;
-      font-weight: 600;
+      padding: 3rem 0;
     }
 
     h1 {
-      font-size: clamp(2.2rem, 5vw, 4.2rem);
-      line-height: 1.05;
-      letter-spacing: -0.03em;
-      margin-bottom: 1rem;
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
     }
 
-    .hero p {
+    .subtitle {
       color: var(--muted);
-      font-size: 1.05rem;
-      max-width: 60ch;
-    }
-
-    .hero-actions {
-      display: flex;
-      gap: 1rem;
-      margin-top: 1.75rem;
-      flex-wrap: wrap;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0.9rem 1.2rem;
-      border-radius: 999px;
-      font-weight: 600;
-      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
-    }
-
-    .btn:hover {
-      transform: translateY(-2px);
-    }
-
-    .btn-primary {
-      background: var(--text);
-      color: white;
-      box-shadow: 0 10px 24px rgba(17, 24, 39, 0.16);
-    }
-
-    .btn-secondary {
-      background: white;
-      border: 1px solid var(--border);
-      color: var(--text);
-    }
-
-    .hero-panel {
-      background: linear-gradient(145deg, #eff6ff, #ffffff);
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      padding: 1.5rem;
-      min-height: 280px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .hero-panel h2 {
-      font-size: 1rem;
-      color: var(--muted);
-      margin-bottom: 1rem;
-    }
-
-    .stat-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1rem;
-    }
-
-    .stat {
-      background: white;
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 1rem;
-    }
-
-    .stat strong {
-      display: block;
-      font-size: 1.4rem;
-      margin-bottom: 0.25rem;
-    }
-
-    section {
-      padding: 2rem 0 4rem;
-    }
-
-    .section-header {
       margin-bottom: 1.5rem;
     }
 
-    .section-header h2 {
-      font-size: clamp(1.7rem, 3vw, 2.4rem);
-      margin-bottom: 0.4rem;
-      letter-spacing: -0.02em;
-    }
-
-    .section-header p {
-      color: var(--muted);
-      max-width: 60ch;
-    }
-
-    .about-card,
-    .contact-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 2rem;
-      box-shadow: var(--shadow);
-    }
-
-    .about-grid {
-      display: grid;
-      grid-template-columns: 1.2fr 0.8fr;
-      gap: 1.5rem;
-    }
-
-    .about-list {
-      list-style: none;
-      display: grid;
-      gap: 0.85rem;
-    }
-
-    .about-list li {
-      padding: 0.9rem 1rem;
-      background: #f9fafb;
+    .card {
+      background: var(--card);
       border: 1px solid var(--border);
       border-radius: 16px;
-      color: var(--muted);
-    }
-
-    .projects-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1.25rem;
-    }
-
-    .project-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
       padding: 1.5rem;
-      box-shadow: var(--shadow);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      margin-bottom: 1.5rem;
     }
 
-    .project-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 16px 36px rgba(17, 24, 39, 0.12);
+    h2 {
+      margin-bottom: 0.75rem;
+      font-size: 1.5rem;
     }
 
-    .project-tag {
-      display: inline-block;
-      padding: 0.3rem 0.7rem;
-      border-radius: 999px;
-      background: #f3f4f6;
-      color: var(--muted);
-      font-size: 0.85rem;
-      margin-bottom: 1rem;
-    }
-
-    .project-card h3 {
-      margin-bottom: 0.6rem;
-      font-size: 1.2rem;
-    }
-
-    .project-card p {
-      color: var(--muted);
-      margin-bottom: 1rem;
-    }
-
-    .project-link {
-      color: var(--accent);
-      font-weight: 600;
-    }
-
-    .contact-card {
+    .projects {
       display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 1.5rem;
-      align-items: center;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
     }
 
-    .contact-card p {
-      color: var(--muted);
-      max-width: 55ch;
+    .project {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem;
+      background: white;
+    }
+
+    .project h3 {
+      margin-bottom: 0.5rem;
     }
 
     footer {
-      padding: 0 0 2.5rem;
-      color: var(--muted);
       text-align: center;
-      font-size: 0.95rem;
+      color: var(--muted);
+      margin-top: 2rem;
+      font-size: 0.9rem;
     }
 
-    @media (max-width: 900px) {
-      .hero-card,
-      .about-grid,
-      .contact-card,
-      .projects-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .hero {
-        padding-top: 4rem;
-      }
-
-      .hero-card,
-      .about-card,
-      .contact-card {
-        padding: 1.5rem;
-      }
-    }
-
-    @media (max-width: 640px) {
-      .nav {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .nav-links {
-        gap: 0.85rem;
-      }
-
-      .hero-actions {
-        flex-direction: column;
-        align-items: stretch;
-      }
-
-      .btn {
-        width: 100%;
-      }
-
-      .stat-grid {
-        grid-template-columns: 1fr;
-      }
+    @media (max-width: 600px) {
+      h1 { font-size: 2rem; }
+      header { flex-direction: column; align-items: flex-start; }
+      nav { margin-top: 0.5rem; }
     }
   </style>
 </head>
 <body>
-  <header>
-    <div class="container nav">
-      <a href="#top" class="brand">Your Name</a>
-      <nav class="nav-links" aria-label="Primary navigation">
+  <div class="container">
+    <header>
+      <strong>Roman Friedman</strong>
+      <nav>
         <a href="#about">About</a>
         <a href="#projects">Projects</a>
         <a href="#contact">Contact</a>
       </nav>
-    </div>
-  </header>
+    </header>
 
-  <main id="top">
     <section class="hero">
-      <div class="container">
-        <div class="hero-card">
-          <div>
-            <span class="eyebrow">Designer • Developer • Creator</span>
-            <h1>Building thoughtful digital experiences.</h1>
-            <p>
-              I create clean, user-focused websites and products that balance visual clarity,
-              performance, and usability. This portfolio highlights who I am, what I build,
-              and how to get in touch.
-            </p>
-            <div class="hero-actions">
-              <a href="#projects" class="btn btn-primary">View Projects</a>
-              <a href="#contact" class="btn btn-secondary">Get in Touch</a>
-            </div>
-          </div>
-
-          <aside class="hero-panel" aria-label="Highlights">
-            <div>
-              <h2>Quick Highlights</h2>
-              <div class="stat-grid">
-                <div class="stat">
-                  <strong>12+</strong>
-                  <span>Projects completed</span>
-                </div>
-                <div class="stat">
-                  <strong>4 yrs</strong>
-                  <span>Design & web experience</span>
-                </div>
-                <div class="stat">
-                  <strong>100%</strong>
-                  <span>Responsive approach</span>
-                </div>
-                <div class="stat">
-                  <strong>Fast</strong>
-                  <span>Modern front-end builds</span>
-                </div>
-              </div>
-            </div>
-          </aside>
-        </div>
-      </div>
+      <h1>Online Education Coordinator</h1>
+      <p class="subtitle">California State University, Monterey Bay (CSUMB)</p>
+      <p>
+        I support faculty in designing meaningful, engaging online learning experiences.
+        My work focuses on practical teaching strategies, equity-centered design, and
+        sustainable approaches to AI in education.
+      </p>
     </section>
 
-    <section id="about">
-      <div class="container">
-        <div class="section-header">
-          <h2>About</h2>
+    <section id="about" class="card">
+      <h2>About</h2>
+      <p>
+        As an Online Education Coordinator at CSUMB, I work with faculty to improve
+        online teaching through low-overhead, high-impact practices. My approach emphasizes
+        real teaching (not just course design), student engagement, and clear assessment.
+      </p>
+      <p>
+        I am particularly interested in how AI can be used thoughtfully in education—
+        supporting equity and efficiency while maintaining academic integrity and
+        meaningful learning.
+      </p>
+    </section>
+
+    <section id="projects" class="card">
+      <h2>Projects & Initiatives</h2>
+      <div class="projects">
+        <div class="project">
+          <h3>AI in Teaching Initiative</h3>
           <p>
-            I focus on crafting modern interfaces with strong visual hierarchy, accessible design,
-            and maintainable code.
+            Developing guidance for faculty on ethical, purpose-driven use of AI in
+            assignments and course design.
           </p>
         </div>
 
-        <div class="about-card about-grid">
-          <div>
-            <p>
-              I enjoy turning ideas into polished digital products. My work combines thoughtful UX,
-              clean development practices, and attention to detail. Whether I am building a landing
-              page, a portfolio, or a full web app, I aim for simplicity, clarity, and a seamless
-              experience across devices.
-            </p>
-          </div>
-          <ul class="about-list">
-            <li>Responsive web design</li>
-            <li>Front-end development</li>
-            <li>UI systems and component design</li>
-            <li>Performance-minded implementation</li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <section id="projects">
-      <div class="container">
-        <div class="section-header">
-          <h2>Projects</h2>
+        <div class="project">
+          <h3>Faculty Development Programs</h3>
           <p>
-            A few examples of recent work. Replace these cards with your own portfolio pieces,
-            case studies, or client work.
+            Creating scalable, low-time professional development focused on real teaching
+            practice rather than heavy instructional design training.
           </p>
         </div>
 
-        <div class="projects-grid">
-          <article class="project-card">
-            <span class="project-tag">Web Design</span>
-            <h3>Creative Studio Site</h3>
-            <p>
-              A sleek marketing website for a small studio with strong typography, smooth layout,
-              and mobile-first responsiveness.
-            </p>
-            <a href="#" class="project-link">View Case Study</a>
-          </article>
-
-          <article class="project-card">
-            <span class="project-tag">Product UI</span>
-            <h3>Dashboard Experience</h3>
-            <p>
-              A modern analytics dashboard designed for clarity, quick scanning, and efficient
-              navigation across large datasets.
-            </p>
-            <a href="#" class="project-link">See Project</a>
-          </article>
-
-          <article class="project-card">
-            <span class="project-tag">Front-End Dev</span>
-            <h3>Portfolio Platform</h3>
-            <p>
-              A reusable portfolio framework with responsive sections, modular styling, and a
-              polished visual system.
-            </p>
-            <a href="#" class="project-link">Explore Build</a>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section id="contact">
-      <div class="container">
-        <div class="section-header">
-          <h2>Contact</h2>
+        <div class="project">
+          <h3>Quality Matters Support</h3>
           <p>
-            Interested in working together or want to say hello? Reach out and I will get back to you.
+            Supporting faculty through QM-aligned course improvements while keeping
+            focus on actual teaching effectiveness.
           </p>
         </div>
-
-        <div class="contact-card">
-          <div>
-            <p>
-              Email: yourname@example.com<br />
-              LinkedIn: linkedin.com/in/yourname<br />
-              GitHub: github.com/yourname
-            </p>
-          </div>
-          <a href="mailto:yourname@example.com" class="btn btn-primary">Send Email</a>
-        </div>
       </div>
     </section>
-  </main>
 
-  <footer>
-    <div class="container">
-      <p>© 2026 Your Name. All rights reserved.</p>
-    </div>
-  </footer>
+    <section id="contact" class="card">
+      <h2>Contact</h2>
+      <p>Email: roman@example.com</p>
+      <p>LinkedIn: linkedin.com/in/roman-friedman</p>
+    </section>
+
+    <footer>
+      <p>© 2026 Roman Friedman</p>
+    </footer>
+  </div>
 </body>
 </html>
