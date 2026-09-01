@@ -618,7 +618,7 @@ footer.pagefoot a{color:var(--blue-dark)}
   <section class="step-sec" id="submit">
     <div class="sec-head"><span class="sec-num" style="background:var(--check)">✓</span><h2>Submit</h2></div>
     <div class="submit-panel" id="submitPanel">
-      <p class="readout" id="readout">You have completed <b><span id="doneCount">0</span> of 9</b> steps.</p>
+      <p class="readout" id="readout">You have completed 0 of 9 steps. Still to do:</p>
       <ul class="missing" id="missingList"></ul>
       <p class="prose" style="font-size:var(--fs-sm)">The button copies your step 9 summary, plus your working answers underneath it, to your clipboard. Paste that into the Canvas box.</p>
       <p><button class="btn" id="copyBtn" type="button">Copy my summary</button><span class="copy-status" id="copyStatus"></span></p>
@@ -702,7 +702,6 @@ footer.pagefoot a{color:var(--blue-dark)}
       }
     });
 
-    document.getElementById("doneCount").textContent = done;
     document.getElementById("meterNum").textContent = done + "/" + TOTAL;
     document.getElementById("meterFill").style.width = Math.round(done / TOTAL * 100) + "%";
 
@@ -711,9 +710,11 @@ footer.pagefoot a{color:var(--blue-dark)}
     list.innerHTML = "";
     if (!missing.length){
       panel.setAttribute("data-ready", "1");
-      document.getElementById("readout").innerHTML = "All <b>" + TOTAL + "</b> steps are complete.";
+      document.getElementById("readout").textContent = "All " + TOTAL + " steps are complete.";
     } else {
       panel.setAttribute("data-ready", "0");
+      document.getElementById("readout").textContent =
+        "You have completed " + done + " of " + TOTAL + " steps. Still to do:";
       missing.forEach(function(m){
         var li = document.createElement("li"), a = document.createElement("a");
         a.href = m.href; a.textContent = m.label; li.appendChild(a); list.appendChild(li);
@@ -742,10 +743,12 @@ footer.pagefoot a{color:var(--blue-dark)}
 
   // build a first draft of the summary from steps 2 to 8
   document.getElementById("draftBtn").addEventListener("click", function(){
-    // the student's step-2 sentence often already ends in "roles" / "positions" / "jobs"
-    var area = val("s2-area").replace(/\.$/, "").replace(/\s+(roles|positions|jobs)$/i, "");
+    // the step-2 sentence usually already contains "roles"/"positions"/"jobs";
+    // only add the word when it is not in there already
+    var area = val("s2-area").replace(/\.$/, "").replace(/^i want to look at\s+/i, "");
+    var noun = /\b(roles?|positions?|jobs?|openings?)\b/i.test(area) ? "" : " roles";
     var d = [];
-    d.push("I searched for " + (area || "__________") + " roles and read " + (val("s3-count") || "_____") + " job postings.");
+    d.push("I searched for " + (area || "__________") + noun + " and read " + (val("s3-count") || "_____") + " job postings.");
     d.push("");
     d.push("One opportunity I found was " + (val("s4-opp") || "__________").replace(/\.$/, "") + ". I saw this in " +
       (val("s4-n") || "_____") + " of " + (val("s4-m") || "_____") + " postings. For example, one posting said " +
