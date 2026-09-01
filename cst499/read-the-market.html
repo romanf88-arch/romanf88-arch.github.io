@@ -877,7 +877,11 @@ footer.pagefoot a{color:var(--blue-dark)}
   var stepsEl = document.getElementById("steps");
   function keepChipVisible(chip){
     var pad = 12;
-    var left = chip.offsetLeft, right = left + chip.offsetWidth;
+    // NOT offsetLeft: .rail is position:sticky, so it is the offsetParent and
+    // offsetLeft would include the rail label's width. Measure against the strip.
+    var cr = chip.getBoundingClientRect(), sr = stepsEl.getBoundingClientRect();
+    var left  = cr.left - sr.left + stepsEl.scrollLeft;
+    var right = left + cr.width;
     var viewL = stepsEl.scrollLeft, viewR = viewL + stepsEl.clientWidth;
     if (left < viewL + pad) stepsEl.scrollLeft = Math.max(0, left - pad);
     else if (right > viewR - pad) stepsEl.scrollLeft = right - stepsEl.clientWidth + pad;
