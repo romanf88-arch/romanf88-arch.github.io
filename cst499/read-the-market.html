@@ -71,13 +71,13 @@ h1{font-size:var(--fs-2xl);line-height:var(--lh-tight);font-weight:900;margin:0 
   font-size:var(--fs-xs);font-weight:700;text-decoration:none;transition:.15s}
 .step:hover{border-color:var(--blue);color:var(--blue-dark)}
 .step .n{width:19px;height:19px;border-radius:50%;display:grid;place-items:center;
-  background:var(--border-light);color:var(--muted);font-size:11px;font-weight:900;flex:none}
+  background:var(--border-light);color:var(--muted);font-size:12px;font-weight:900;flex:none}
 .step[data-state="current"]{border-color:var(--blue);background:var(--goal-bg);color:var(--blue-dark)}
 .step[data-state="current"] .n{background:var(--blue);color:#fff}
 .step[data-state="done"]{border-color:var(--check);color:var(--check)}
 .step[data-state="done"] .n{background:var(--check);color:#fff}
 .step[data-state="done"] .n span{visibility:hidden}
-.step[data-state="done"] .n::after{content:"✓";position:absolute;font-size:11px}
+.step[data-state="done"] .n::after{content:"✓";position:absolute;font-size:12px}
 .step .n{position:relative}
 .meter{display:flex;align-items:center;gap:9px;white-space:nowrap}
 .meter-track{width:104px;height:7px;border-radius:100px;background:var(--border-light);overflow:hidden}
@@ -742,7 +742,8 @@ footer.pagefoot a{color:var(--blue-dark)}
 
   // build a first draft of the summary from steps 2 to 8
   document.getElementById("draftBtn").addEventListener("click", function(){
-    var area = val("s2-area").replace(/\.$/, "");
+    // the student's step-2 sentence often already ends in "roles" / "positions" / "jobs"
+    var area = val("s2-area").replace(/\.$/, "").replace(/\s+(roles|positions|jobs)$/i, "");
     var d = [];
     d.push("I searched for " + (area || "__________") + " roles and read " + (val("s3-count") || "_____") + " job postings.");
     d.push("");
