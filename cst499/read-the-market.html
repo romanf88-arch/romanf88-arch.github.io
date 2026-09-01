@@ -885,6 +885,18 @@ footer.pagefoot a{color:var(--blue-dark)}
     var viewL = stepsEl.scrollLeft, viewR = viewL + stepsEl.clientWidth;
     if (left < viewL + pad) stepsEl.scrollLeft = Math.max(0, left - pad);
     else if (right > viewR - pad) stepsEl.scrollLeft = right - stepsEl.clientWidth + pad;
+
+    // Show one completed step behind the current one when it fits, so scrolling
+    // back up walks the strip left instead of leaving it parked at the end.
+    var prev = chip.previousElementSibling;
+    if (prev){
+      var pr = prev.getBoundingClientRect();
+      var pLeft = pr.left - sr.left + stepsEl.scrollLeft;
+      if (pLeft < stepsEl.scrollLeft + pad &&
+          right - pLeft <= stepsEl.clientWidth - pad * 2){
+        stepsEl.scrollLeft = Math.max(0, pLeft - pad);
+      }
+    }
     edges();
   }
 
