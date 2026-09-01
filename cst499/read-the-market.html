@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Read the Market | CST499</title>
+<meta name="description" content="CST499 Week 2 — read real job postings, find one opportunity and one challenge, and decide what evidence to build this semester.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;0,900;1,400&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   CST499 activity page
+   Course palette and Lato kept so this reads as the same course.
+   Changed: six type steps instead of twelve, prose capped at 66ch,
+   1.65 leading, real heading levels, and a progress rail.
+   ============================================================ */
+:root{
+  --blue:#0374B5; --blue-dark:#0a5a8a;
+  --text:#2D3B45; --muted:#5C6873;
+  --border:#C7CDD1; --border-light:#E4E8EA;
+  --goal-bg:#F3F8FB; --check:#0B874B; --check-bg:#F2FAF5;
+  --warn:#8A5D00; --warn-bg:#FFF9EC;
+  --paper:#fff; --ground:#FBFBFC;
+
+  --fs-xs:.8125rem; --fs-sm:.9375rem; --fs-base:1.0625rem;
+  --fs-lg:1.375rem; --fs-xl:1.75rem; --fs-2xl:2.25rem;
+
+  --lh-body:1.65; --lh-tight:1.25; --measure:66ch;
+  --sp-1:.35rem; --sp-2:.7rem; --sp-3:1.1rem; --sp-4:1.7rem; --sp-5:2.6rem; --sp-6:4rem;
+  --radius:8px; --font:"Lato","Helvetica Neue",Helvetica,Arial,sans-serif; --rail-h:64px;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;scroll-padding-top:calc(var(--rail-h) + 16px)}
+body{margin:0;background:var(--ground);color:var(--text);font-family:var(--font);
+  font-size:var(--fs-base);line-height:var(--lh-body);-webkit-font-smoothing:antialiased}
+img{max-width:100%}
+a{color:var(--blue-dark);text-decoration:underline;text-underline-offset:2px;text-decoration-thickness:1px}
+a:hover{color:var(--blue)}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px;border-radius:3px}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.92em;
+  background:var(--goal-bg);padding:1px 5px;border-radius:4px}
+
+.shell{max-width:1180px;margin:0 auto;padding:0 clamp(1rem,4vw,2.5rem) var(--sp-6)}
+.prose{max-width:var(--measure)}
+
+.crumb{font-size:var(--fs-xs);color:var(--muted);letter-spacing:.02em;padding:var(--sp-3) 0 0}
+.crumb a{color:var(--muted)}
+
+.masthead{padding:var(--sp-3) 0 var(--sp-4);border-bottom:1px solid var(--border-light);margin-bottom:var(--sp-5)}
+.eyebrow{font-size:var(--fs-xs);font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--blue-dark);margin:0 0 var(--sp-2)}
+h1{font-size:var(--fs-2xl);line-height:var(--lh-tight);font-weight:900;margin:0 0 var(--sp-2);
+  letter-spacing:-.015em;max-width:20ch}
+.duebar{display:flex;flex-wrap:wrap;gap:var(--sp-1) var(--sp-3);align-items:baseline;
+  font-size:var(--fs-sm);color:var(--muted);margin-top:var(--sp-3)}
+.duebar .due{color:var(--text);font-weight:700}
+.duebar .sep{color:var(--border)}
+
+/* ---------- progress rail ---------- */
+.rail{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.97);
+  backdrop-filter:saturate(1.6) blur(6px);border-bottom:1px solid var(--border-light);margin-bottom:var(--sp-4)}
+.rail-in{max-width:1180px;margin:0 auto;padding:0 clamp(1rem,4vw,2.5rem);
+  display:flex;align-items:center;gap:var(--sp-3);height:var(--rail-h)}
+.rail-label{font-size:var(--fs-xs);font-weight:900;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--muted);white-space:nowrap}
+.steps{display:flex;gap:5px;overflow-x:auto;flex:1;scrollbar-width:none;padding:2px 0}
+.steps::-webkit-scrollbar{display:none}
+.step{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;padding:6px 11px 6px 7px;
+  border-radius:100px;border:1px solid var(--border-light);background:#fff;color:var(--muted);
+  font-size:var(--fs-xs);font-weight:700;text-decoration:none;transition:.15s}
+.step:hover{border-color:var(--blue);color:var(--blue-dark)}
+.step .n{width:19px;height:19px;border-radius:50%;display:grid;place-items:center;
+  background:var(--border-light);color:var(--muted);font-size:11px;font-weight:900;flex:none}
+.step[data-state="current"]{border-color:var(--blue);background:var(--goal-bg);color:var(--blue-dark)}
+.step[data-state="current"] .n{background:var(--blue);color:#fff}
+.step[data-state="done"]{border-color:var(--check);color:var(--check)}
+.step[data-state="done"] .n{background:var(--check);color:#fff}
+.step[data-state="done"] .n span{visibility:hidden}
+.step[data-state="done"] .n::after{content:"✓";position:absolute;font-size:11px}
+.step .n{position:relative}
+.meter{display:flex;align-items:center;gap:9px;white-space:nowrap}
+.meter-track{width:104px;height:7px;border-radius:100px;background:var(--border-light);overflow:hidden}
+.meter-fill{height:100%;width:0%;background:var(--check);border-radius:100px;transition:width .35s ease}
+.meter-num{font-size:var(--fs-xs);font-weight:900;color:var(--muted);font-variant-numeric:tabular-nums}
+@media (max-width:860px){.rail-label,.meter-track{display:none}.rail-in{gap:var(--sp-2)}}
+
+/* ---------- headings ---------- */
+h2{font-size:var(--fs-xl);line-height:var(--lh-tight);font-weight:900;margin:0;letter-spacing:-.01em}
+h3{font-size:var(--fs-lg);line-height:1.3;font-weight:700;margin:var(--sp-4) 0 var(--sp-2)}
+h4{font-size:var(--fs-base);font-weight:900;margin:var(--sp-3) 0 var(--sp-1)}
+p{margin:0 0 var(--sp-3)}
+ul,ol{margin:0 0 var(--sp-3);padding-left:1.35em;max-width:var(--measure)}
+li{margin-bottom:var(--sp-2)}
+li:last-child{margin-bottom:0}
+
+section.step-sec{padding-top:var(--sp-5);margin-top:var(--sp-5);border-top:1px solid var(--border-light)}
+.sec-head{display:flex;align-items:flex-start;gap:var(--sp-3);margin-bottom:var(--sp-3)}
+.sec-num{flex:none;width:38px;height:38px;border-radius:50%;background:var(--blue);color:#fff;
+  display:grid;place-items:center;font-weight:900;font-size:var(--fs-base);margin-top:2px}
+section[data-done="1"] .sec-num{background:var(--check)}
+section[data-done="1"] .sec-num::after{content:"✓"}
+section[data-done="1"] .sec-num .lbl{display:none}
+
+/* ---------- callouts ---------- */
+.note{border-left:3px solid var(--border);padding:2px 0 2px var(--sp-3);margin:var(--sp-3) 0;
+  max-width:var(--measure);font-size:var(--fs-sm)}
+.note.goal{border-left-color:var(--blue);background:var(--goal-bg);padding:var(--sp-3);border-radius:0 var(--radius) var(--radius) 0}
+.note.warn{border-left-color:var(--warn);background:var(--warn-bg);padding:var(--sp-3);border-radius:0 var(--radius) var(--radius) 0}
+.note .label{display:block;font-size:var(--fs-xs);font-weight:900;letter-spacing:.07em;
+  text-transform:uppercase;color:var(--blue-dark);margin-bottom:var(--sp-1)}
+.note.warn .label{color:var(--warn)}
+.note p:last-child,.note ul:last-child{margin-bottom:0}
+
+.outcome{background:var(--paper);border:1px solid var(--border-light);border-left:4px solid var(--blue);
+  border-radius:0 var(--radius) var(--radius) 0;padding:var(--sp-3) var(--sp-4);
+  margin:var(--sp-3) 0 var(--sp-4);max-width:var(--measure)}
+.outcome .label{font-size:var(--fs-xs);font-weight:900;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--blue-dark);display:block;margin-bottom:var(--sp-2)}
+.outcome p{margin:0 0 var(--sp-2)}
+.outcome p:last-child{margin-bottom:0}
+.outcome .say{font-style:italic;border-left:2px solid var(--border-light);padding-left:var(--sp-3)}
+
+.haves{list-style:none;padding:0;margin:var(--sp-3) 0;max-width:var(--measure);counter-reset:h}
+.haves li{position:relative;padding-left:2em;margin-bottom:var(--sp-2);font-size:var(--fs-sm);counter-increment:h}
+.haves li::before{content:counter(h);position:absolute;left:0;top:.15em;width:1.4em;height:1.4em;
+  border-radius:50%;background:var(--goal-bg);color:var(--blue-dark);font-size:.8em;font-weight:900;
+  display:grid;place-items:center}
+
+/* ---------- comparison pairs (too broad / better) ---------- */
+.pairs{display:grid;gap:var(--sp-2);margin:var(--sp-3) 0 var(--sp-4);max-width:var(--measure)}
+.pair{display:grid;grid-template-columns:auto 1fr;gap:var(--sp-2) var(--sp-3);align-items:baseline;
+  background:var(--paper);border:1px solid var(--border-light);border-radius:var(--radius);padding:var(--sp-3)}
+.pair .tag{font-size:var(--fs-xs);font-weight:900;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap}
+.pair .tag.bad{color:var(--warn)}
+.pair .tag.good{color:var(--check)}
+.pair .txt{font-size:var(--fs-sm);margin:0}
+.pair .txt.bad{color:var(--muted)}
+
+/* ---------- examples ---------- */
+.ex{background:var(--paper);border:1px solid var(--border-light);border-radius:var(--radius);
+  padding:var(--sp-3) var(--sp-4);margin-bottom:var(--sp-3);max-width:var(--measure)}
+.ex-tag{font-size:var(--fs-xs);font-weight:900;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--muted);display:block;margin-bottom:var(--sp-2)}
+.ex h4{margin-top:0}
+.ex p{font-size:var(--fs-sm);margin-bottom:var(--sp-2)}
+.ex p:last-child{margin-bottom:0}
+.ex .part{display:block;font-weight:900;color:var(--blue-dark);font-size:var(--fs-xs);
+  letter-spacing:.05em;text-transform:uppercase;margin-bottom:2px}
+.ex .part.chal{color:var(--warn)}
+
+/* ---------- work boxes and sentence frames ---------- */
+.box{background:var(--paper);border:1px solid var(--border);border-radius:var(--radius);
+  padding:var(--sp-3) var(--sp-4);margin:var(--sp-3) 0 var(--sp-4);max-width:var(--measure);
+  position:relative;transition:border-color .2s}
+.box[data-filled="1"]{border-color:var(--check)}
+.box-head{display:flex;align-items:flex-start;justify-content:space-between;gap:var(--sp-3);margin-bottom:var(--sp-2)}
+.box-title{font-weight:900;font-size:var(--fs-base);margin:0;line-height:1.35}
+.box-kind{flex:none;font-size:var(--fs-xs);font-weight:900;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--muted);padding-top:3px}
+.box-kind.partner{color:var(--blue-dark)}
+.box .hint{font-size:var(--fs-sm);color:var(--muted);margin:0 0 var(--sp-2)}
+.tick{position:absolute;top:-9px;right:-9px;width:24px;height:24px;border-radius:50%;background:var(--check);
+  color:#fff;display:none;place-items:center;font-size:13px;font-weight:900;box-shadow:0 0 0 3px var(--ground)}
+.box[data-filled="1"] .tick{display:grid}
+
+.frame{margin:0 0 var(--sp-3)}
+.frame:last-child{margin-bottom:0}
+.frame .lead-in{font-size:var(--fs-sm);color:var(--text);font-weight:700;display:block;margin-bottom:var(--sp-1)}
+textarea,input[type=text],input[type=number]{width:100%;font-family:var(--font);font-size:var(--fs-base);
+  line-height:1.55;color:var(--text);border:1px solid var(--border);border-radius:6px;
+  padding:var(--sp-2) var(--sp-3);background:#fff;resize:vertical}
+textarea{min-height:104px}
+textarea:focus,input:focus{border-color:var(--blue);outline:none;box-shadow:0 0 0 3px rgba(3,116,181,.15)}
+.counts{display:flex;align-items:center;gap:var(--sp-2);flex-wrap:wrap;font-size:var(--fs-sm);margin-bottom:var(--sp-2)}
+.counts input[type=number]{width:76px;text-align:center;padding:var(--sp-1) var(--sp-2)}
+.fieldlabel{font-size:var(--fs-xs);font-weight:900;text-transform:uppercase;letter-spacing:.06em;
+  color:var(--muted);display:block;margin-bottom:4px}
+
+details.selfcheck{margin-top:var(--sp-2);border-top:1px solid var(--border-light);padding-top:var(--sp-2)}
+details.selfcheck summary{cursor:pointer;font-size:var(--fs-sm);font-weight:700;color:var(--blue-dark);
+  list-style:none;display:flex;align-items:center;gap:7px}
+details.selfcheck summary::-webkit-details-marker{display:none}
+details.selfcheck summary::before{content:"+";font-weight:900;width:16px;display:inline-block}
+details.selfcheck[open] summary::before{content:"–"}
+
+/* checklist */
+.checklist{list-style:none;padding:0;margin:var(--sp-2) 0 0;max-width:var(--measure)}
+.checklist li{margin-bottom:var(--sp-2)}
+.checklist label{display:flex;gap:var(--sp-2);align-items:flex-start;cursor:pointer;font-size:var(--fs-sm)}
+.checklist input{margin-top:.35em;width:17px;height:17px;flex:none;accent-color:var(--check)}
+.checklist input:checked + span{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--border)}
+
+/* word counter */
+.wordcount{font-size:var(--fs-xs);font-weight:900;color:var(--muted);margin-top:var(--sp-1);
+  display:flex;gap:var(--sp-2);align-items:center}
+.wordcount[data-ok="1"]{color:var(--check)}
+.wordcount[data-ok="over"]{color:var(--warn)}
+
+.btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--font);font-size:var(--fs-base);
+  font-weight:900;padding:var(--sp-2) var(--sp-4);border-radius:6px;border:1px solid var(--blue);
+  background:var(--blue);color:#fff;cursor:pointer;text-decoration:none}
+.btn:hover{background:var(--blue-dark);border-color:var(--blue-dark);color:#fff}
+.btn.ghost{background:#fff;color:var(--blue-dark)}
+.btn.ghost:hover{background:var(--goal-bg);color:var(--blue-dark)}
+.btn.sm{font-size:var(--fs-sm);padding:var(--sp-1) var(--sp-3)}
+.copy-status{font-size:var(--fs-sm);color:var(--check);font-weight:700;margin-left:var(--sp-2)}
+
+.submit-panel{background:var(--paper);border:2px solid var(--border);border-radius:var(--radius);
+  padding:var(--sp-4);max-width:var(--measure);transition:border-color .25s}
+.submit-panel[data-ready="1"]{border-color:var(--check);background:var(--check-bg)}
+.readout{font-size:var(--fs-sm);color:var(--muted);margin-bottom:var(--sp-2)}
+.readout b{color:var(--text)}
+.missing{font-size:var(--fs-sm);margin:var(--sp-2) 0 var(--sp-3);padding-left:1.2em}
+.missing a{color:var(--warn)}
+.savebar{font-size:var(--fs-xs);color:var(--muted);display:flex;align-items:center;gap:6px;margin:var(--sp-4) 0 0}
+.savebar .dot{width:7px;height:7px;border-radius:50%;background:var(--check)}
+
+footer.pagefoot{margin-top:var(--sp-6);padding-top:var(--sp-4);border-top:1px solid var(--border-light);
+  font-size:var(--fs-sm);color:var(--muted)}
+footer.pagefoot a{color:var(--blue-dark)}
+.foot-nav{display:flex;justify-content:space-between;gap:var(--sp-3);flex-wrap:wrap;margin-bottom:var(--sp-3)}
+@media print{.rail{display:none}}
+</style>
+</head>
+<body>
+
+<div class="rail" role="navigation" aria-label="Activity progress">
+  <div class="rail-in">
+    <span class="rail-label">Read the Market</span>
+    <div class="steps" id="steps">
+      <a class="step" href="#step-1" data-for="1"><span class="n"><span>1</span></span>Name</a>
+      <a class="step" href="#step-2" data-for="2"><span class="n"><span>2</span></span>Work area</a>
+      <a class="step" href="#step-3" data-for="3"><span class="n"><span>3</span></span>Postings</a>
+      <a class="step" href="#step-4" data-for="4"><span class="n"><span>4</span></span>Opportunity</a>
+      <a class="step" href="#step-5" data-for="5"><span class="n"><span>5</span></span>Challenge</a>
+      <a class="step" href="#step-6" data-for="6"><span class="n"><span>6</span></span>What changes</a>
+      <a class="step" href="#step-7" data-for="7"><span class="n"><span>7</span></span>Check</a>
+      <a class="step" href="#step-8" data-for="8"><span class="n"><span>8</span></span>Partner</a>
+      <a class="step" href="#step-9" data-for="9"><span class="n"><span>9</span></span>Summary</a>
+    </div>
+    <div class="meter" aria-live="polite">
+      <div class="meter-track"><div class="meter-fill" id="meterFill"></div></div>
+      <span class="meter-num" id="meterNum">0/9</span>
+    </div>
+  </div>
+</div>
+
+<div class="shell">
+
+  <p class="crumb"><a href="home.html">CST499</a> · Read the Market</p>
+
+  <header class="masthead">
+    <p class="eyebrow">CST499 · Fall 2026 · Week 2 · Own your progress · Not graded</p>
+    <h1>Read the Market</h1>
+    <div class="duebar">
+      <span class="due">Due Wednesday, September 2, 11:59 p.m.</span>
+      <span class="sep">·</span><span>Started in Wednesday's session</span>
+      <span class="sep">·</span><span>About 45 minutes</span>
+    </div>
+  </header>
+
+  <h2 style="font-size:var(--fs-lg)">Why we are doing this</h2>
+  <div class="prose">
+    <p>This activity is meant to help you build labor market literacy. Instead of guessing what employers want, you will read real job postings and look for evidence. This will help you move from a general career interest to evidence-based professional positioning: being able to explain what kind of work you are preparing for, what employers are asking for, and what evidence you can build to show that you are ready.</p>
+    <p>This also connects to capstone planning. Your capstone should not just be something interesting; it should help you create evidence of skills, tools, or experience that matter for the kind of work you may want after graduation.</p>
+    <p>You will also practice metacognition by explaining what you learned, checking your understanding, and talking it through with a partner.</p>
+    <p>Finally, this activity prepares you for authentic professional communication. Next week, you will draft a short professional introduction that could help someone understand what opportunities fit you and why.</p>
+  </div>
+
+  <h3>The big idea</h3>
+  <div class="prose">
+    <p>This week, we are connecting three things:</p>
+    <ol>
+      <li>What the market is asking for</li>
+      <li>What kind of work holds your attention</li>
+      <li>What evidence you want to build next</li>
+    </ol>
+    <p><strong>Today's focus is the first one: what the market is asking for.</strong></p>
+  </div>
+
+  <h3>What you will submit</h3>
+  <div class="prose">
+    <p>At the end of this activity, you will submit a short summary in Canvas. Your summary should be about 150 words and should include:</p>
+  </div>
+  <ol class="haves">
+    <li>The kind of work you searched for.</li>
+    <li>How many job postings you read.</li>
+    <li>One opportunity you found.</li>
+    <li>One challenge you found.</li>
+    <li>Quoted evidence from the postings.</li>
+    <li>One thing you could do differently this semester because of what you learned.</li>
+    <li>Notes from your partner conversation.</li>
+  </ol>
+
+  <div class="outcome">
+    <span class="label">Learning outcome</span>
+    <p>By the end of this activity, you should be able to say:</p>
+    <p class="say">I found two things about the market that I did not know before: one opportunity and one challenge. For each one, I can explain what I saw in the job postings and what I could do differently because of it.</p>
+    <p>In other words, you are not just reporting what job postings say. You are using the postings to make a decision about your own next steps.</p>
+  </div>
+
+  <div class="note goal">
+    <span class="label">How this page works</span>
+    <p>Your work saves in this browser as you type. The bar at the top shows which steps are done. Nothing leaves the page until you copy your summary at step 9.</p>
+  </div>
+
+  <!-- ===== 1 ===== -->
+  <section class="step-sec" id="step-1" data-sec="1" style="border-top:0;margin-top:var(--sp-4)">
+    <div class="sec-head"><span class="sec-num"><span class="lbl">1</span></span><h2>Enter your name</h2></div>
+    <div class="box" data-track><span class="tick">✓</span>
+      <p class="hint">This will be included in the summary you copy into Canvas at the end.</p>
+      <label class="fieldlabel" for="fullname">Your full name</label>
+      <input type="text" id="fullname" data-note data-min="2" placeholder="First and last name">
+    </div>
+  </section>
+
+  <!-- ===== 2 ===== -->
+  <section class="step-sec" id="step-2" data-sec="2">
+    <div class="sec-head"><span class="sec-num"><span class="lbl">2</span></span><h2>Choose a work area to search</h2></div>
+    <div class="prose">
+      <p>Write one sentence that describes the kind of work you want to investigate. This does not have to be your final career goal. It just needs to be specific enough that you can search for real postings.</p>
+    </div>
+
+    <h3>Examples</h3>
+    <div class="pairs">
+      <div class="pair">
+        <span class="tag bad">Too broad</span><p class="txt bad">I want to work in tech.</p>
+        <span class="tag good">Better</span><p class="txt">I want to look at entry-level software engineering roles that mention backend development.</p>
+      </div>
+      <div class="pair">
+        <span class="tag bad">Too broad</span><p class="txt bad">I am interested in cybersecurity.</p>
+        <span class="tag good">Better</span><p class="txt">I want to look at new-graduate cybersecurity roles that mention application security or cloud security.</p>
+      </div>
+      <div class="pair">
+        <span class="tag bad">Too broad</span><p class="txt bad">I like data.</p>
+        <span class="tag good">Better</span><p class="txt">I want to look at entry-level data analyst roles in healthcare, education, or public agencies.</p>
+      </div>
+    </div>
+
+    <div class="box" data-track><span class="tick">✓</span>
+      <div class="box-head"><p class="box-title">Write your search area</p><span class="box-kind">Work</span></div>
+      <div class="frame">
+        <span class="lead-in">I want to look at&hellip;</span>
+        <textarea id="s2-area" data-note data-min="12" style="min-height:76px" placeholder="entry-level data analyst roles in healthcare, education, or public agencies."></textarea>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 3 ===== -->
+  <section class="step-sec" id="step-3" data-sec="3">
+    <div class="sec-head"><span class="sec-num"><span class="lbl">3</span></span><h2>Find real job postings</h2></div>
+    <div class="prose">
+      <p>Find <strong>5 to 6 real job postings</strong> related to the work area you chose. You may use job boards, company career pages, LinkedIn, Handshake, The Muse, Greenhouse, Lever, or another source.</p>
+      <p>As you read, look for repeated patterns. Do not only look at the job title. Pay attention to:</p>
+    </div>
+    <ul>
+      <li>required skills</li>
+      <li>preferred skills</li>
+      <li>tools or programming languages</li>
+      <li>portfolio expectations</li>
+      <li>project experience</li>
+      <li>internships or prior experience</li>
+      <li>communication skills</li>
+      <li>teamwork expectations</li>
+      <li>AI screening language</li>
+      <li>security, cloud, data, or domain-specific requirements</li>
+      <li>anything that surprises you</li>
+    </ul>
+    <div class="note"><p><strong>For each posting, save the link and copy down important phrases.</strong> You will need the exact wording in steps 4 and 5.</p></div>
+
+    <div class="box" data-track><span class="tick">✓</span>
+      <div class="box-head"><p class="box-title">Your posting log</p><span class="box-kind">Work</span></div>
+      <p class="hint">Paste the links and the phrases you copied. This is your working notes, not part of the 150-word summary.</p>
+      <div class="counts">
+        <label class="fieldlabel" for="s3-count" style="margin:0">How many postings did you read?</label>
+        <input type="number" id="s3-count" data-note min="0" max="99" placeholder="6">
+      </div>
+      <textarea id="s3-log" data-note data-min="20" style="min-height:160px" placeholder="1. Company — role — link&#10;   &quot;phrase you want to quote later&quot;&#10;&#10;2. ..."></textarea>
+    </div>
+  </section>
+
+  <!-- ===== 4 ===== -->
+  <section class="step-sec" id="step-4" data-sec="4">
+    <div class="sec-head"><span class="sec-num"><span class="lbl">4</span></span><h2>Identify one opportunity</h2></div>
+    <div class="prose"><p>An opportunity is something in the postings that gives you a possible path forward. It might be:</p></div>
+    <ul>
+      <li>a skill you can learn this semester</li>
+      <li>a project you could build</li>
+      <li>a tool you could practice</li>
+      <li>a type of experience you can get outside a job</li>
+      <li>a way to make your capstone more useful</li>
+      <li>a qualification that is easier to build than you expected</li>
+    </ul>
+    <div class="note goal">
+      <span class="label">Questions to ask</span>
+      <ul>
+        <li>What are employers asking for that I could realistically start building now?</li>
+        <li>What evidence could I create this semester?</li>
+        <li>What could I add to my capstone, portfolio, resume, or LinkedIn profile?</li>
+      </ul>
+    </div>
+
+    <div class="box" data-track><span class="tick">✓</span>
+      <div class="box-head"><p class="box-title">Your opportunity</p><span class="box-kind">Work</span></div>
+      <div class="frame">
+        <span class="lead-in">One opportunity I found is&hellip;</span>
+        <textarea id="s4-opp" data-note data-min="12" style="min-height:82px"></textarea>
+      </div>
+      <div class="frame">
+        <span class="lead-in">What evidence showed you this?</span>
+        <div class="counts">
+          <span>I saw this in</span><input type="number" id="s4-n" data-note min="0" max="99" placeholder="3">
+          <span>out of</span><input type="number" id="s4-m" data-note min="0" max="99" placeholder="6">
+          <span>postings.</span>
+        </div>
+        <label class="fieldlabel" for="s4-q1">One posting said</label>
+        <input type="text" id="s4-q1" data-note placeholder="&quot;portfolio of side projects&quot;">
+        <label class="fieldlabel" for="s4-q2" style="margin-top:var(--sp-2)">Another said</label>
+        <input type="text" id="s4-q2" data-note placeholder="&quot;experience building and deploying applications&quot;">
+      </div>
+      <div class="frame">
+        <span class="lead-in">Because of this, I could&hellip;</span>
+        <textarea id="s4-act" data-note data-min="12" style="min-height:82px"></textarea>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 5 ===== -->
+  <section class="step-sec" id="step-5" data-sec="5">
+    <div class="sec-head"><span class="sec-num"><span class="lbl">5</span></span><h2>Identify one challenge</h2></div>
+    <div class="prose"><p>A challenge is something in the postings that may make the path harder for you. It might be:</p></div>
+    <ul>
+      <li>a skill you do not have yet</li>
+      <li>a tool or language you have not used</li>
+      <li>a level of experience you did not expect</li>
+      <li>a portfolio expectation</li>
+      <li>a screening process you did not know about</li>
+      <li>a mismatch between your coursework and the job market</li>
+      <li>a requirement that appears often</li>
+    </ul>
+    <div class="note warn">
+      <span class="label">Questions to ask</span>
+      <ul>
+        <li>What are employers asking for that I am not ready to show yet?</li>
+        <li>What surprised me?</li>
+        <li>What might make it harder for me to get noticed?</li>
+        <li>What should I start addressing now instead of later?</li>
+      </ul>
+    </div>
+
+    <div class="box" data-track><span class="tick">✓</span>
+      <div class="box-head"><p class="box-title">Your challenge</p><span class="box-kind">Work</span></div>
+      <div class="frame">
+        <span class="lead-in">One challenge I found is&hellip;</span>
+        <textarea id="s5-chal" data-note data-min="12" style="min-height:82px"></textarea>
+      </div>
+      <div class="frame">
+        <span class="lead-in">What evidence showed you this?</span>
+        <div class="counts">
+          <span>I saw this in</span><input type="number" id="s5-n" data-note min="0" max="99" placeholder="4">
+          <span>out of</span><input type="number" id="s5-m" data-note min="0" max="99" placeholder="6">
+          <span>postings.</span>
+        </div>
+        <label class="fieldlabel" for="s5-q1">One posting said</label>
+        <input type="text" id="s5-q1" data-note placeholder="&quot;experience with AWS or similar cloud platforms&quot;">
+        <label class="fieldlabel" for="s5-q2" style="margin-top:var(--sp-2)">Another said</label>
+        <input type="text" id="s5-q2" data-note placeholder="&quot;building services in a production environment&quot;">
+      </div>
+      <div class="frame">
+        <span class="lead-in">Because of this, I could&hellip;</span>
+        <textarea id="s5-act" data-note data-min="12" style="min-height:82px"></textarea>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 6 ===== -->
+  <section class="step-sec" id="step-6" data-sec="6">
+    <div class="sec-head"><span class="sec-num"><span class="lbl">6</span></span><h2>Notice what might change</h2></div>
+    <div class="prose">
+      <p>Job markets change. Choose one thing you expect may change in this work area. This does not need to be a perfect prediction. The goal is to practice watching the market over time.</p>
+      <p>Write three things: what you expect to change, what might drive that change, and what signal you would watch.</p>
+    </div>
+
+    <div class="note">
+      <span class="label">Examples of drivers</span>
+      <p>A driver is something that may cause change: AI tools, cybersecurity threats, new regulations, cloud adoption, automation, budget cuts, demand for data, remote work policies, changes in hiring practices.</p>
+    </div>
+    <div class="note">
+      <span class="label">Examples of signals</span>
+      <p>A signal is evidence you could watch later: more postings requiring a specific tool, fewer entry-level postings, more postings asking for AI experience, more postings asking for security knowledge, more postings requiring a portfolio, changes in salary ranges, changes in internship or new-graduate programs.</p>
+    </div>
+
+    <div class="box" data-track><span class="tick">✓</span>
+      <div class="box-head"><p class="box-title">What you expect to change</p><span class="box-kind">Work</span></div>
+      <div class="frame">
+        <span class="lead-in">I expect&hellip;</span>
+        <textarea id="s6-what" data-note data-min="8" style="min-height:70px" placeholder="may change"></textarea>
+      </div>
+      <div class="frame">
+        <span class="lead-in">because&hellip; <em style="font-weight:400;color:var(--muted)">(the driver)</em></span>
+        <textarea id="s6-driver" data-note data-min="8" style="min-height:70px"></textarea>
+      </div>
+      <div class="frame">
+        <span class="lead-in">The signal I would watch is&hellip;</span>
+        <textarea id="s6-signal" data-note data-min="8" style="min-height:70px"></textarea>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 7 ===== -->
+  <section class="step-sec" id="step-7" data-sec="7">
+    <div class="sec-head"><span class="sec-num"><span class="lbl">7</span></span><h2>Check your work</h2></div>
+    <div class="prose"><p>Before you submit, check whether your response meets the learning outcome.</p></div>
+
+    <div class="box" data-track><span class="tick">✓</span>
+      <div class="box-head"><p class="box-title">Check it yourself</p><span class="box-kind">Self-check</span></div>
+      <p class="hint">Tick each one you can answer yes to. Go back and fix any you cannot.</p>
+      <ul class="checklist" id="checklist">
+        <li><label><input type="checkbox" data-check><span>Did I identify one opportunity and one challenge?</span></label></li>
+        <li><label><input type="checkbox" data-check><span>Did I use real job postings as evidence?</span></label></li>
+        <li><label><input type="checkbox" data-check><span>Did I include quoted phrases from the postings?</span></label></li>
+        <li><label><input type="checkbox" data-check><span>Did I say how many postings showed this pattern?</span></label></li>
+        <li><label><input type="checkbox" data-check><span>Did I explain what I could do differently because of what I found?</span></label></li>
+        <li><label><input type="checkbox" data-check><span>Did I avoid copying the learning outcome word-for-word?</span></label></li>
+        <li><label><input type="checkbox" data-check><span>Can someone else understand why this matters for my next steps?</span></label></li>
+      </ul>
+    </div>
+
+    <div class="note goal">
+      <span class="label">Optional: get AI feedback</span>
+      <p>You may also use the CST499 AI Dojo. Try asking:</p>
+      <p><em>Walk me through the Read the Market activity.</em></p>
+      <p><em>Here is my Read the Market draft. Does it identify one opportunity, one challenge, evidence from postings, and one action I could take this semester?</em></p>
+      <p><strong>Use AI feedback to improve your thinking, not to replace it.</strong></p>
+    </div>
+  </section>
+
+  <!-- ===== 8 ===== -->
+  <section class="step-sec" id="step-8" data-sec="8">
+    <div class="sec-head"><span class="sec-num"><span class="lbl">8</span></span><h2>Partner conversation</h2></div>
+    <div class="prose">
+      <p>Share your understanding of the learning outcome with your partner. Take turns. Each person should explain what they think the activity is asking them to learn. The partner should ask questions or point out anything unclear.</p>
+    </div>
+
+    <div class="box" data-track><span class="tick">✓</span>
+      <div class="box-head"><p class="box-title">Your reflection</p><span class="box-kind partner">Partner</span></div>
+      <label class="fieldlabel" for="s8-partner">Partner's full name</label>
+      <input type="text" id="s8-partner" data-note style="margin-bottom:var(--sp-3)">
+      <div class="frame">
+        <span class="lead-in">Before the conversation, I thought the learning outcome meant&hellip;</span>
+        <textarea id="s8-before" data-note data-min="10" style="min-height:80px"></textarea>
+      </div>
+      <div class="frame">
+        <span class="lead-in">After talking with my partner, I understand it as&hellip;</span>
+        <textarea id="s8-after" data-note data-min="10" style="min-height:80px"></textarea>
+      </div>
+      <div class="frame">
+        <span class="lead-in">My partner helped me see&hellip;</span>
+        <textarea id="s8-helped" data-note data-min="10" style="min-height:80px"></textarea>
+        <p class="hint" style="margin-top:var(--sp-1)">If your understanding did not change, write what your partner said that confirmed it.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 9 ===== -->
+  <section class="step-sec" id="step-9" data-sec="9">
+    <div class="sec-head"><span class="sec-num"><span class="lbl">9</span></span><h2>Write your Canvas summary</h2></div>
+    <div class="prose">
+      <p>Write one short summary of about 150 words. Use this structure:</p>
+    </div>
+    <div class="note">
+      <p>I searched for __________ roles and read _____ job postings.</p>
+      <p>One opportunity I found was __________. I saw this in _____ postings. For example, one posting said "__________," and another said "__________." This matters because __________. Because of this, I could __________ this semester.</p>
+      <p>One challenge I found was __________. I saw this in _____ postings. For example, one posting said "__________," and another said "__________." This matters because __________. Because of this, I could __________.</p>
+      <p>From my partner conversation, I clarified that the point of this activity is __________.</p>
+    </div>
+
+    <div class="box" data-track><span class="tick">✓</span>
+      <div class="box-head"><p class="box-title">Your summary</p><span class="box-kind">Submitted</span></div>
+      <p class="hint">
+        <button class="btn ghost sm" type="button" id="draftBtn">Build a first draft from my answers</button>
+        This assembles what you wrote in steps 2 to 8 into the structure above. It is a starting point to revise, not a finished summary.
+      </p>
+      <textarea id="s9-summary" data-note data-min="60" style="min-height:230px"></textarea>
+      <p class="wordcount" id="wordcount" data-ok="0"><span id="wcNum">0</span> words <span style="font-weight:400;color:var(--muted)">· aim for about 150</span></p>
+    </div>
+  </section>
+
+  <!-- ===== examples ===== -->
+  <section class="step-sec" id="examples">
+    <h2>Examples</h2>
+    <div class="prose"><p>These examples show the kind of thinking this activity is asking for. They are models, not student submissions.</p></div>
+
+    <div class="ex">
+      <span class="ex-tag">Example 1 · Entry-level software engineering</span>
+      <p><em>I searched for entry-level software engineering roles and read six postings.</em></p>
+      <p><span class="part">Opportunity</span>Three of the six postings mentioned side projects, portfolio work, or shipped products. One posting asked for a "portfolio of side projects," and another asked for "experience building and deploying applications." I had assumed that coursework alone would be the main evidence for a new graduate. These postings show that employers may value public, finished work even when someone does not have much job experience yet. Because of this, I could shape my capstone into something deployed, documented, and easy to show.</p>
+      <p><span class="part chal">Challenge</span>Four of the six postings mentioned cloud tools, deployment, or production systems. One posting asked for "experience with AWS or similar cloud platforms," and another mentioned "building services in a production environment." I have written code for classes, but I have not always deployed it or maintained it like a real product. Because of this, I could use my capstone to practice deployment, documentation, testing, and version control.</p>
+    </div>
+
+    <div class="ex">
+      <span class="ex-tag">Example 2 · Cybersecurity</span>
+      <p><em>I searched for new-graduate cybersecurity roles and read five postings.</em></p>
+      <p><span class="part">Opportunity</span>Two postings listed bug bounty, CTF, or live hacking experience as preferred qualifications. One posting said "CTF experience preferred," and another said "bug bounty or responsible disclosure experience is a plus." I did not realize that some evidence for cybersecurity roles could come from activities outside internships. Because of this, I could join a CTF event this semester and document what I learn in a public write-up or portfolio.</p>
+      <p><span class="part chal">Challenge</span>Three postings expected programming experience in languages I have not used much. One posting asked for "Python, Go, or Rust," and another asked for "ability to read and review code." I thought cybersecurity would mostly focus on tools and concepts, but these postings show that code review and programming matter too. Because of this, I could choose one language, such as Python or Go, and use it in my capstone or security practice.</p>
+    </div>
+
+    <div class="ex">
+      <span class="ex-tag">Example 3 · Data analyst</span>
+      <p><em>I searched for entry-level data analyst roles and read six postings.</em></p>
+      <p><span class="part">Opportunity</span>Four postings mentioned dashboards, visualization, or communicating results to non-technical audiences. One posting asked for "clear dashboards for business stakeholders," and another asked for "ability to explain findings to non-technical teams." I had thought data analyst roles were mostly about technical analysis. These postings show that communication is part of the job. Because of this, I could make sure my capstone includes a dashboard and a short explanation written for a real audience.</p>
+      <p><span class="part chal">Challenge</span>Five postings mentioned SQL, and three mentioned Tableau, Power BI, or a similar visualization tool. One posting said "strong SQL required," and another asked for "experience with Tableau or Power BI." I have used data in classes, but I am not sure I can show strong evidence with these specific tools yet. Because of this, I could build a small project this semester that uses SQL queries and a dashboard, then include screenshots and a short explanation in my portfolio.</p>
+    </div>
+  </section>
+
+  <!-- ===== submit ===== -->
+  <section class="step-sec" id="submit">
+    <div class="sec-head"><span class="sec-num" style="background:var(--check)">✓</span><h2>Submit</h2></div>
+    <div class="submit-panel" id="submitPanel">
+      <p class="readout" id="readout">You have completed <b><span id="doneCount">0</span> of 9</b> steps.</p>
+      <ul class="missing" id="missingList"></ul>
+      <p class="prose" style="font-size:var(--fs-sm)">The button copies your step 9 summary, plus your working answers underneath it, to your clipboard. Paste that into the Canvas box.</p>
+      <p><button class="btn" id="copyBtn" type="button">Copy my summary</button><span class="copy-status" id="copyStatus"></span></p>
+    </div>
+    <p class="savebar"><span class="dot"></span><span id="saveState">Saved in this browser</span></p>
+  </section>
+
+  <div class="note goal" style="margin-top:var(--sp-5)">
+    <span class="label">Final reminder</span>
+    <p>The goal is not to find the perfect job right now. The goal is to learn how to read the market, notice patterns, and make better decisions about what evidence you want to build next.</p>
+  </div>
+
+  <footer class="pagefoot">
+    <div class="foot-nav">
+      <a href="home.html">&larr; Course home</a>
+      <a href="never-feels-like-work.html">Know What Makes Me Tick &rarr;</a>
+    </div>
+    <p>Prof. Sathya Narayanan · Paige Weisskirch<br>
+    <a href="mailto:snarayanan@csumb.edu">snarayanan@csumb.edu</a> · @profsathya on Slack</p>
+    <p>Computing Talent Initiative · CSU Monterey Bay — CST499 Computer Science Capstone · Read the Market</p>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var KEY = "cst499.read-the-market.v2";
+  var fields = [].slice.call(document.querySelectorAll("[data-note]"));
+  var checks = [].slice.call(document.querySelectorAll("[data-check]"));
+  var boxes  = [].slice.call(document.querySelectorAll(".box[data-track]"));
+  var secs   = [].slice.call(document.querySelectorAll("section[data-sec]"));
+  var TOTAL  = secs.length;
+
+  function val(id){ var e = document.getElementById(id); return e ? e.value.trim() : ""; }
+
+  function save(){
+    var o = { _checks: checks.map(function(c){ return c.checked; }) };
+    fields.forEach(function(f){ if (f.value.trim()) o[f.id] = f.value; });
+    try { localStorage.setItem(KEY, JSON.stringify(o)); } catch(e){}
+  }
+  function restore(){
+    var o;
+    try { o = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch(e){ o = {}; }
+    fields.forEach(function(f){ if (o[f.id] != null) f.value = o[f.id]; });
+    if (o._checks) checks.forEach(function(c,i){ c.checked = !!o._checks[i]; });
+  }
+
+  // a box is complete when every field in it that declares data-min is long enough
+  function boxDone(box){
+    var required = [].slice.call(box.querySelectorAll("[data-min]"));
+    if (box.querySelector("[data-check]")){
+      var cs = [].slice.call(box.querySelectorAll("[data-check]"));
+      return cs.every(function(c){ return c.checked; });
+    }
+    if (!required.length){
+      var any = box.querySelector("textarea, input[type=text]");
+      return !!(any && any.value.trim().length >= 2);
+    }
+    return required.every(function(f){
+      return f.value.trim().length >= parseInt(f.getAttribute("data-min"), 10);
+    });
+  }
+
+  function refresh(){
+    var done = 0, missing = [];
+    secs.forEach(function(sec){
+      var bs = [].slice.call(sec.querySelectorAll(".box[data-track]"));
+      var ok = bs.length > 0 && bs.every(boxDone);
+      bs.forEach(function(b){ b.setAttribute("data-filled", boxDone(b) ? "1" : "0"); });
+      sec.setAttribute("data-done", ok ? "1" : "0");
+      var chip = document.querySelector('.step[data-for="' + sec.getAttribute("data-sec") + '"]');
+      if (chip){
+        chip.setAttribute("data-complete", ok ? "1" : "0");
+        if (chip.getAttribute("data-state") !== "current") chip.setAttribute("data-state", ok ? "done" : "");
+      }
+      if (ok) done++;
+      else {
+        var h = sec.querySelector("h2");
+        missing.push({ label: "Step " + sec.getAttribute("data-sec") + " — " + (h ? h.textContent : ""), href: "#" + sec.id });
+      }
+    });
+
+    document.getElementById("doneCount").textContent = done;
+    document.getElementById("meterNum").textContent = done + "/" + TOTAL;
+    document.getElementById("meterFill").style.width = Math.round(done / TOTAL * 100) + "%";
+
+    var panel = document.getElementById("submitPanel");
+    var list = document.getElementById("missingList");
+    list.innerHTML = "";
+    if (!missing.length){
+      panel.setAttribute("data-ready", "1");
+      document.getElementById("readout").innerHTML = "All <b>" + TOTAL + "</b> steps are complete.";
+    } else {
+      panel.setAttribute("data-ready", "0");
+      missing.forEach(function(m){
+        var li = document.createElement("li"), a = document.createElement("a");
+        a.href = m.href; a.textContent = m.label; li.appendChild(a); list.appendChild(li);
+      });
+    }
+
+    // word count on step 9
+    var s9 = val("s9-summary");
+    var n = s9 ? s9.split(/\s+/).filter(Boolean).length : 0;
+    document.getElementById("wcNum").textContent = n;
+    var wc = document.getElementById("wordcount");
+    wc.setAttribute("data-ok", n === 0 ? "0" : (n > 200 ? "over" : (n >= 120 ? "1" : "0")));
+  }
+
+  var t;
+  function onInput(){
+    clearTimeout(t);
+    document.getElementById("saveState").textContent = "Saving…";
+    t = setTimeout(function(){
+      save(); refresh();
+      document.getElementById("saveState").textContent = "Saved in this browser";
+    }, 320);
+  }
+  fields.forEach(function(f){ f.addEventListener("input", onInput); });
+  checks.forEach(function(c){ c.addEventListener("change", onInput); });
+
+  // build a first draft of the summary from steps 2 to 8
+  document.getElementById("draftBtn").addEventListener("click", function(){
+    var area = val("s2-area").replace(/\.$/, "");
+    var d = [];
+    d.push("I searched for " + (area || "__________") + " roles and read " + (val("s3-count") || "_____") + " job postings.");
+    d.push("");
+    d.push("One opportunity I found was " + (val("s4-opp") || "__________").replace(/\.$/, "") + ". I saw this in " +
+      (val("s4-n") || "_____") + " of " + (val("s4-m") || "_____") + " postings. For example, one posting said " +
+      (val("s4-q1") || "\"__________\"") + ", and another said " + (val("s4-q2") || "\"__________\"") +
+      ". This matters because __________. Because of this, I could " + (val("s4-act") || "__________").replace(/\.$/, "") + " this semester.");
+    d.push("");
+    d.push("One challenge I found was " + (val("s5-chal") || "__________").replace(/\.$/, "") + ". I saw this in " +
+      (val("s5-n") || "_____") + " of " + (val("s5-m") || "_____") + " postings. For example, one posting said " +
+      (val("s5-q1") || "\"__________\"") + ", and another said " + (val("s5-q2") || "\"__________\"") +
+      ". This matters because __________. Because of this, I could " + (val("s5-act") || "__________").replace(/\.$/, "") + ".");
+    d.push("");
+    d.push("From my partner conversation, I clarified that the point of this activity is " +
+      (val("s8-after") || "__________").replace(/\.$/, "") + ".");
+    var box = document.getElementById("s9-summary");
+    if (box.value.trim() && !confirm("Replace what you have already written in step 9?")) return;
+    box.value = d.join("\n");
+    onInput();
+    box.focus();
+  });
+
+  // copy
+  document.getElementById("copyBtn").addEventListener("click", function(){
+    var L = [];
+    L.push("CST499 — Read the Market");
+    L.push("Name: " + (val("fullname") || "(not given)"));
+    L.push("");
+    L.push("SUMMARY");
+    L.push(val("s9-summary") || "(not written)");
+    L.push("");
+    L.push("---- working answers ----");
+    L.push("Search area: " + val("s2-area"));
+    L.push("Postings read: " + val("s3-count"));
+    L.push("");
+    L.push("Opportunity: " + val("s4-opp"));
+    L.push("Seen in " + val("s4-n") + " of " + val("s4-m") + " postings. Quotes: " + val("s4-q1") + " / " + val("s4-q2"));
+    L.push("Action: " + val("s4-act"));
+    L.push("");
+    L.push("Challenge: " + val("s5-chal"));
+    L.push("Seen in " + val("s5-n") + " of " + val("s5-m") + " postings. Quotes: " + val("s5-q1") + " / " + val("s5-q2"));
+    L.push("Action: " + val("s5-act"));
+    L.push("");
+    L.push("What may change: " + val("s6-what"));
+    L.push("Driver: " + val("s6-driver"));
+    L.push("Signal: " + val("s6-signal"));
+    L.push("");
+    L.push("Partner: " + val("s8-partner"));
+    L.push("Before: " + val("s8-before"));
+    L.push("After: " + val("s8-after"));
+    L.push("Partner helped me see: " + val("s8-helped"));
+    L.push("");
+    L.push("Posting log:");
+    L.push(val("s3-log"));
+
+    var text = L.join("\n");
+    var s = document.getElementById("copyStatus");
+    function ok(){ s.textContent = "Copied. Paste it into Canvas."; setTimeout(function(){ s.textContent = ""; }, 4500); }
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(ok, function(){ fb(text, ok); });
+    } else { fb(text, ok); }
+  });
+  function fb(text, done){
+    var ta = document.createElement("textarea");
+    ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand("copy"); done(); } catch(e){}
+    document.body.removeChild(ta);
+  }
+
+  // scroll spy
+  if ("IntersectionObserver" in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (!e.isIntersecting) return;
+        var id = e.target.getAttribute("data-sec");
+        document.querySelectorAll(".step").forEach(function(c){
+          if (c.getAttribute("data-state") === "current")
+            c.setAttribute("data-state", c.getAttribute("data-complete") === "1" ? "done" : "");
+        });
+        var chip = document.querySelector('.step[data-for="' + id + '"]');
+        if (chip){
+          chip.setAttribute("data-state", "current");
+          chip.scrollIntoView({ block:"nearest", inline:"nearest" });
+        }
+      });
+    }, { rootMargin:"-70px 0px -62% 0px", threshold:0 });
+    secs.forEach(function(s){ io.observe(s); });
+  }
+
+  restore();
+  refresh();
+})();
+</script>
+</body>
+</html>
