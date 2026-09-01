@@ -825,25 +825,52 @@ footer.pagefoot a{color:var(--blue-dark)}
     document.body.removeChild(ta);
   }
 
-  // scroll spy
-  if ("IntersectionObserver" in window){
-    var io = new IntersectionObserver(function(entries){
-      entries.forEach(function(e){
-        if (!e.isIntersecting) return;
-        var id = e.target.getAttribute("data-sec");
-        document.querySelectorAll(".step").forEach(function(c){
-          if (c.getAttribute("data-state") === "current")
-            c.setAttribute("data-state", c.getAttribute("data-complete") === "1" ? "done" : "");
-        });
-        var chip = document.querySelector('.step[data-for="' + id + '"]');
-        if (chip){
-          chip.setAttribute("data-state", "current");
-          keepChipVisible(chip);
-        }
-      });
-    }, { rootMargin:"-70px 0px -62% 0px", threshold:0 });
-    secs.forEach(function(s){ io.observe(s); });
+  // Scroll spy. Computed from scroll position rather than IntersectionObserver
+  // entries: an observer only reports sections that CHANGE state, so scrolling
+  // back up often never re-fires for the section above and the rail stays put.
+  // Reading positions directly is symmetric in both directions.
+  var currentSecId = null;
+
+  function activeSection(){
+    var line = document.querySelector(".rail").offsetHeight + 28; // just under the rail
+    var best = secs[0], bestTop = -Infinity;
+    for (var i = 0; i < secs.length; i++){
+      var top = secs[i].getBoundingClientRect().top;
+      if (top <= line && top > bestTop){ bestTop = top; best = secs[i]; }
+    }
+    // near the very bottom the last section wins, so a short final step still lights up
+    if (window.innerHeight + window.scrollY >= document.body.scrollHeight - 4)
+      best = secs[secs.length - 1];
+    return best;
   }
+
+  function syncSpy(){
+    var sec = activeSection();
+    if (!sec) return;
+    var id = sec.getAttribute("data-sec");
+    if (id === currentSecId) return;          // nothing changed, leave the rail alone
+    currentSecId = id;
+    var chips = document.querySelectorAll(".step");
+    for (var i = 0; i < chips.length; i++){
+      var c = chips[i];
+      if (c.getAttribute("data-state") === "current")
+        c.setAttribute("data-state", c.getAttribute("data-complete") === "1" ? "done" : "");
+    }
+    var chip = document.querySelector('.step[data-for="' + id + '"]');
+    if (chip){
+      chip.setAttribute("data-state", "current");
+      keepChipVisible(chip);
+    }
+  }
+
+  var spyTick = false;
+  function onScroll(){
+    if (spyTick) return;
+    spyTick = true;
+    requestAnimationFrame(function(){ spyTick = false; syncSpy(); });
+  }
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", onScroll);
 
   // Scroll ONLY the chip strip. Never scrollIntoView here: that would scroll
   // the document too and fight the wheel.
@@ -887,6 +914,7 @@ footer.pagefoot a{color:var(--blue-dark)}
 
   restore();
   refresh();
+  syncSpy();   // light up the right chip on first paint, including a mid-page reload
 })();
 </script>
 </body>
